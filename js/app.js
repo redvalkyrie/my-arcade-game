@@ -4,7 +4,7 @@
  *https://www.w3schools.com/
  * https://discussions.udacity.com/
  * Sound files from the following sources
- * http://wwww.playonloop.com
+ * https://www.bensound.com/royalty-free-music/track/summer
  * http://www.noiseforfun.com/browse-sound-effects/
  */
 let startScreen = document.querySelector('.startUp');
@@ -12,7 +12,7 @@ let charList = document.querySelectorAll('.person');
 /**
 @description: adds event listeners to each starting character and begins game
  * when selected
- * @param: kid: each child png on start screen
+ * @param: kid: each .png on start screen (characters).
  */
 charList.forEach(function(kid) {
     kid.addEventListener('click', function() {
@@ -27,21 +27,20 @@ charList.forEach(function(kid) {
 });
 /**
  *@description: Enemies our player must avoid
- * @param: x: enemy's X coordinate, y: enemy's Y coordinate
+ * @param: x: enemy's x coordinate, y: enemy's y coordinate
  */
 let Enemy = function(x, y) {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+
     this.x = x;
     this.y = y;
     this.speed = Math.floor(Math.random() * (300-80)) + 80;
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+    // The image/sprite for enemies
     this.sprite = 'images/enemy-bug.png';
 };
 /**
- *@description: Update the enemy's position, required method for game
- * @param: dt, a time delta between ticks
+ *@description: updates the enemy's position on the canvas and checks and calls
+  *collisionCheck to check for collisions
+  *@param: dt: time delta
  */
 Enemy.prototype.update = function(dt) {
     // Multiplies any movement by the dt parameter which will ensure the game
@@ -59,8 +58,8 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 /**
- *@description: checks for colllions between player and bugs
- * @param: player, the user's player Character
+ *@description: Checks for colllions between player and bugs
+ * @param: player, the user's player Character consolled by the user.
  */
 Enemy.prototype.collisionCheck = function(player) {
     if (player.x < this.x + 70 &&
@@ -69,6 +68,7 @@ Enemy.prototype.collisionCheck = function(player) {
         55 + player.y > this.y) {
             player.reset();
             lifeRemove();
+            hitSound.play();
         }
 }
 /**
@@ -85,7 +85,7 @@ let Player = function(x, y) {
  */
 Player.prototype.reset = function () {
     this.x = 200;
-    this.y = 380;
+    this.y = 390;
 }
 
 Player.prototype.update = function(dt) {
@@ -99,7 +99,7 @@ Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 /**
- * @description: moves player based upon key pressed. Checks if player x/y values
+ * @description: Moves player based upon key pressed. Checks if player x/y values
  *  are within canvas range.  If 'up' arrow moves player into water, player is
  *  reset to starting position.
  * @param: key: the key the user pressed
@@ -117,11 +117,12 @@ Player.prototype.handleInput = function(key) {
             }
             break;
         case 'up':
-            if (this.y > 70) {
+            if (this.y > 80) {
                 this.y = this.y - 80;
             }else {
                 this.reset();
                 addSplash();
+                splashSound.cloneNode(true).play();
             }
             break;
         case 'down':
@@ -133,58 +134,66 @@ Player.prototype.handleInput = function(key) {
             break;
     }
 };
+
 /**
- * @description: player the user has selected in starting position
+ * @description: Player the user has selected in starting position
  */
-let player = new Player(200, 380);
+let player = new Player(200, 390);
 /**
- * @description: array for all bugs
+ * @description: Array for all enemies.
  */
 let allEnemies = new Array();
 /**
- * @description: array to store all Y values of bugs created
+ * @description: Array to store all y values of bugs created
  */
 let bugCheck = new Array();
+
 /**
- * @description: creates enemies for allEnemies
+ * @description: Creates enemies for allEnemies
  */
 let getEnemies = function() {
     const bugs = 4;
-
+    /**
+     *@description: randomly selects a y value for each block row, shuffles
+     randX and randY to decrease likelihood of dublipate X/Y coordinates
+      */
     let randomizedY = function() {
         const positions = [60, 140, 220];
         return positions[Math.floor(Math.random() * 3)];
     };
-    for (let i=0; i<bugs; i++) {
-        let newBug = new Enemy();
-        newBug.x = 0;
-        newBug.y = randomizedY();
-        bugCheck.push(newBug.y);
 
-        allEnemies.push(newBug);
+    for (let i=0; i<bugs; i++) {
+        let enemy = new Enemy();
+        enemy.x = 0;
+        enemy.y = randomizedY();
+        bugCheck.push(enemy.y);
+        allEnemies.push(enemy);
     }
     enemyCheck();
 };
 /**
- * @description: checks all rows for bugs and pushes new bug into allEnemies
-                if a row is empty.
+ * @description: Checks all rows forenemies and pushes new enemy into allEnemies
+ * if a row is empty.
  */
 let enemyCheck = function() {
-    let newBug = new Enemy();
-    newBug.x = 0;
     let topRow = bugCheck.includes(60);
-    console.log(topRow);
     let middleRow = bugCheck.includes(140);
-    console.log(middleRow);
     let bottomRow = bugCheck.includes(220);
-    console.log(bottomRow);
     if(topRow === false) {
+        let newBug = new Enemy();
+        newBug.x =0;
         newBug.y = 60;
         allEnemies.push(newBug);
-    } else if (middleRow === false) {
+    }
+    if (middleRow === false) {
+        let newBug = new Enemy();
+        newBug.x =0;
         newBug.y = 140;
         allEnemies.push(newBug);
-    } else if (bottomRow === false) {
+    }
+    if (bottomRow === false) {
+        let newBug = new Enemy();
+        newBug.x =0;
         newBug.y = 220;
         allEnemies.push(newBug);
     }
@@ -203,7 +212,11 @@ let splash = 0;
 
 function addSplash() {
     splash ++;
-    splashCount.innerHTML = splash;
+    if(splash ===1){
+        splashCount.innerHTML = splash + ' Splash!';
+    } else {
+        splashCount.innerHTML = splash + ' Splashes!';
+    }
 }
 /**
  * @description:removes 1 live(heart) every time there is player/bug collision
@@ -219,8 +232,7 @@ function lifeRemove() {
     }
 }
 /**
- * @description:This listens for key presses and sends the keys to your
- *              Player.handleInput() method.
+ * @description:This listens for key presses and sends the keys to Player.handleInput() method.
  */
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
@@ -232,14 +244,20 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
 /**
- * @description:function for continual looping of background music
+ * @description:Function for continual looping of background music
  */
-//
 function musicPlayer() {
     let music = document.querySelector('.myMusic').loop;
     document.querySelector('.myMusic').innerHTML = music;
 }
+
+//sound effect for player/bug collision
+const hitSound = new Audio('sounds/NFF-slap.mp3');
+
+//sound effect for when player reaches water
+const splashSound = new Audio ('sounds/NFF-bubbling.mp3');
 
 let endHearts = document.querySelector('.totalLives');
 let endSplashes = document.querySelector('.totalSplashes');
@@ -248,8 +266,11 @@ let endGame = document.querySelector('.gameEnd');
 
 // accesses the class "modal" from html
 let modalSelector = document.querySelector('.modal');
+
+let endScore = document.querySelector('.endScore');
 /**
- * @description:checks for conditions of end game are met
+ * @description:Checks for conditions of end game are met.  IF so, displays
+ * win or loss, hearts, and number of splashes.
  */
 function gameOver () {
     if (livesRemaining === 0 || splash === 10){
@@ -257,11 +278,11 @@ function gameOver () {
         if (livesRemaining === 0) {
             endGame.innerHTML = 'Game Over!';
             endHearts.innerHTML = '0 Lives!';
-            endSplashes.innerHTML = splash;
+            endSplashes.innerHTML = splashCount.innerHTML;
         } else {
             endGame.innerHTML = 'You Win!';
             endHearts.innerHTML = heartList.innerHTML;
-            endSplashes.innerHTML = splash;
+            endSplashes.innerHTML = splashCount.innerHTML;
         }
     }
 }
@@ -270,22 +291,24 @@ const replayButton = document.querySelector('.replay');
 
 replayButton.addEventListener('click', gameReset);
 /**
- * @description:Resets game when button clicked to play again
+ * @description:Resets game when button clicked to play again, empties allEnemies,
+ * bugCheck, and allGems.  Resets livesRemaining, splashes,clears all
+ * .innerHTML from modal, and shows startScreen (character selection screen).
  */
 function gameReset() {
     livesRemaining=3;
     splash=0;
     player.reset();
     allEnemies = [];
-    splashCount.innerHTML = 0;
+    splashCount.innerHTML = splash + ' Splashes!';
     endGame.innerHTML = '';
     endHearts.innerHTML = '';
     endSplashes.innerHTML = '';
     bugCheck = [];
+    allGems = [];
     for (let i=0; i < heartCount.length; i++) {
         heartCount[i].style.visibility = 'visible';
     }
     modalSelector.classList.remove('show');
     startScreen.classList.add('show');
-
 }

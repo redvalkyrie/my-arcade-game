@@ -13,7 +13,7 @@
 <body>
     <!-- audio for background music -->
     <audio class="myMusic" controls loop autoplay>
-        <source src="sounds/background-music.mp3" type="audio/mpeg" width="0" height="0">
+        <source src="sounds/bensound-summer.mp3" type="audio/mpeg" width="0" height="0">
         Your browser does not support the audio tag.
     </audio>
 
@@ -28,23 +28,25 @@
                 <img  class="person" src="images/char-princess-girl.png" alt="princess character">
             <p>Run from the bugs to the water!</p>
             <p>Move your character up to the water and avoid the ladybugs.</p>
-            <p>A splash is added each time you dive in the water.</p>
             <p>Use the arrow keys to move your character!</p>
             <p>Get 10 splashes to win the game!</p>
             <p>If you lose all your hearts, it's Game Over!</p>
         </div>
+        <!-- score panel to display hearts and splashes -->
         <section class="score-panel">
+            <div class="score"></div>
             <ul class="hearts">
         		<li><i class="fa fa-heart"></i></li>
         		<li><i class="fa fa-heart"></i></li>
         		<li><i class="fa fa-heart"></i></li>
         	</ul>
-            <span class="splashes">0</span> Splashes
+            <div class="splashes">0 Splashes!</div>
         </section>
         <!--modal opens at end of game -->
         <div class="modal">
           <h2 class="gameEnd">Game Over!</h2>
-          <span class="totalSplashes">0</span> Splashes!
+          <div class = "endScore"></div>
+          <div class="totalSplashes">0 Splashes!</div>
           <div class="totalLives"> </div>
           <button class="replay">Play Again</button>
         </div>
@@ -54,12 +56,18 @@
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
 </body>
+
+<!-- footer for citing sources of sound files -->
 <footer>
     <p>
-        <a rel="nofollow" class="external text" target="_blank" href="https://www.playonloop.com/2018-music-loops/endless-journey/">
-            Endless Journey</a> by PlayonLoop.com is licensed under
-        <a rel="nofollow" class="external text" target="_blank"
-            href="https://creativecommons.org/licenses/by/3.0/"> CC BY 3.0/ Converted from WAV
+        <a rel="nofollow" class="external text" target="_blank" href="http://www.noiseforfun.com/2012-sound-effects/">
+            Sound effects</a> by noiseforfun.com are licensed under
+            <a rel="nofollow" class="external text" target="_blank"
+                href="https://creativecommons.org/licenses/by-nd/3.0/"> CC-BY-ND 3.0 Attribution License
+    </p>
+    <p>
+        <a rel="nofollow" class="external text" target="_blank" href="https://www.bensound.com/royalty-free-music/track/summer">
+            Royalty Free Music from Bensound</a>
     </p>
 </footer>
 </html>
