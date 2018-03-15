@@ -50,6 +50,8 @@ then open, and the game will run in a browser window.
 ## Contributing
 Original game code obtained from: https://github.com/udacity/frontend-nanodegree-arcade-game
 
+Licensing information: http://creativecommons.org/licenses/by-nc/4.0/
+
 Background music Royalty Free Music from Bensound obtained from:
  	https://www.bensound.com/royalty-free-music/track/summer
 
