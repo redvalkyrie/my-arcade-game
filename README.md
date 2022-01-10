@@ -1,5 +1,5 @@
 # Arcade Game
-Amber Fuller 03-05-2018
+03-05-2018
 ## Table of Contents
 * [Synopsis](#Synopsis)
 * [Installation](#Installation)
